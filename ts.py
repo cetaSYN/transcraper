@@ -1,28 +1,38 @@
 #!/usr/bin/python
 
-import urllib
 from youtube_transcript_api import YouTubeTranscriptApi
 from bs4 import BeautifulSoup
-import re
+from os import path
+from re import search, findall 
+from urllib import urlopen
+from time import sleep
+
 
 def main():
+    while True:
+        get_secret_code()
+        sleep(86400)
+
+def get_secret_code():
     ch_URL = 'https://www.youtube.com/user/professormesser'
     video_id_table = get_vID(ch_URL)
     code = getTS(video_id_table[4])
-    if (len(code) > 0):
-        print(code)
-    else:
+    if (len(code) <= 0):
         print("No code found in most recent video")
-
-
+    if (path.exists(('./videos/'+ str(video_id_table[4]))) == False):
+        f = open(('./videos/' +str(video_id_table[4])), "w")
+        f.write(code)
+        f.close()
+    else:
+        print("Video Already Parsed")
 def get_vID(ch_URL):
-    x = urllib.urlopen(ch_URL)
+    x = urlopen(ch_URL)
     html = x.read()
     soup = BeautifulSoup(html, "lxml")
     textSoup = soup.get_text(strip=True)
     rePat = r'HomeVideosPlaylistsCommunityChannelsAbout(.*)yt.setConfig'
-    temp = re.search(rePat, textSoup).group(1)
-    urlTable = re.findall(r'watch\?v=.+?(?=\")', temp)
+    temp = search(rePat, textSoup).group(1)
+    urlTable = findall(r'watch\?v=.+?(?=\")', temp)
     newTable = []
     for url in urlTable:
         tmp = url.encode("ascii")
