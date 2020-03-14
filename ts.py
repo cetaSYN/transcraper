@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 from youtube_transcript_api import YouTubeTranscriptApi
 from bs4 import BeautifulSoup
