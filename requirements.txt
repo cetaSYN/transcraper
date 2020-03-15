@@ -1,3 +1,2 @@
 bs4
-lxml
 youtube_transcript_api
